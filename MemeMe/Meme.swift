@@ -14,3 +14,24 @@ struct Meme {
     var originalImage: UIImage!
     var memedImage: UIImage!
 }
+
+
+extension Meme {
+    static var allMemes: [Meme] {
+        let object = UIApplication.sharedApplication().delegate
+        let appDelegate = object as! AppDelegate
+        return appDelegate.memes
+    }
+    
+    static func remove(index : Int) {
+        let object = UIApplication.sharedApplication().delegate
+        let appDelegate = object as! AppDelegate
+        appDelegate.memes.removeAtIndex(index)
+    }
+    
+    static func add(meme : Meme) {
+        let object = UIApplication.sharedApplication().delegate
+        let appDelegate = object as! AppDelegate
+        appDelegate.memes.append(meme)
+    }
+}

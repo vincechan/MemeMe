@@ -13,6 +13,8 @@ class EditMemeViewController: UIViewController,
     UINavigationControllerDelegate,
     UITextFieldDelegate {
 
+    var editMeme: Meme?
+    
     @IBOutlet weak var albumButton: UIBarButtonItem!
     @IBOutlet weak var cameraButton: UIBarButtonItem!
     @IBOutlet weak var imageView: UIImageView!
@@ -20,30 +22,16 @@ class EditMemeViewController: UIViewController,
     @IBOutlet weak var bottomTextField: UITextField!
     @IBOutlet weak var shareButton: UIBarButtonItem!
     @IBOutlet weak var cancelButton: UIBarButtonItem!
-    @IBOutlet weak var toolbar: UIToolbar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // configure the appearances of the text fields
-        let memeTextAttributes = [
-            NSStrokeColorAttributeName : UIColor.blackColor(),
-            NSForegroundColorAttributeName : UIColor.whiteColor(),
-            NSFontAttributeName : UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
-            NSStrokeWidthAttributeName : -3.0,
-        ]
-        topTextField.defaultTextAttributes = memeTextAttributes
-        bottomTextField.defaultTextAttributes = memeTextAttributes
-        topTextField.textAlignment = NSTextAlignment.Center
-        bottomTextField.textAlignment = NSTextAlignment.Center
+        self.navigationController?.toolbarHidden = false
         
-        // assign the view controller to be the delegate of the text fields
-        topTextField.delegate = self
-        bottomTextField.delegate = self
-        
-        resetControls()
+        configureTextFields()
+        initControlStates()
     }
-
+    
     override func viewWillAppear(animated: Bool) {
         // disable camera if it's not available
         cameraButton.enabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
@@ -85,7 +73,7 @@ class EditMemeViewController: UIViewController,
     }
     
     @IBAction func cancel(sender: UIBarButtonItem) {
-        resetControls()
+        dismissViewControllerAnimated(true, completion: nil)
     }
     
     // handle user picked an image
@@ -154,7 +142,7 @@ class EditMemeViewController: UIViewController,
     func generateMemedImage() -> UIImage {
         // Hide toolbar and navbar
         navigationController?.navigationBar.hidden = true
-        toolbar.hidden = true
+        navigationController?.toolbar.hidden = true
         
         // Render view to an image
         UIGraphicsBeginImageContext(view.frame.size)
@@ -165,32 +153,60 @@ class EditMemeViewController: UIViewController,
         
         // Show toolbar and navbar
         navigationController?.navigationBar.hidden = false
-        toolbar.hidden = false
+        navigationController?.toolbar.hidden = false
         
         return memedImage
     }
     
     // save a meme
-    // the saved memes are not used in MemeMe version 1, they will be used later when we need to display previous memes in table and collection views
     func save() {
         let image = generateMemedImage()
         var meme = Meme(topText: topTextField.text, bottomText: bottomTextField.text, originalImage: imageView.image!, memedImage: image)
-        
-        // Add it to the memes array in the Application Delegate
-        let object = UIApplication.sharedApplication().delegate
-        let appDelegate = object as! AppDelegate
-        appDelegate.memes.append(meme)
+        Meme.add(meme)
     }
     
-    // update controls states to what they should be before an image is picked
-    func resetControls() {
-        topTextField.text = "TOP"
-        topTextField.enabled = false
-        bottomTextField.text = "BOTTOM"
-        bottomTextField.enabled = false
-        shareButton.enabled = false
-        cancelButton.enabled = false
-        imageView.image = nil
+    // configure the text fields appearance
+    func configureTextFields() {
+        let memeTextAttributes = [
+            NSStrokeColorAttributeName : UIColor.blackColor(),
+            NSForegroundColorAttributeName : UIColor.whiteColor(),
+            NSFontAttributeName : UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
+            NSStrokeWidthAttributeName : -3.0,
+        ]
+        topTextField.defaultTextAttributes = memeTextAttributes
+        bottomTextField.defaultTextAttributes = memeTextAttributes
+        topTextField.textAlignment = NSTextAlignment.Center
+        bottomTextField.textAlignment = NSTextAlignment.Center
+        
+        // assign the view controller to be the delegate of the text fields
+        topTextField.delegate = self
+        bottomTextField.delegate = self
+    }
+    
+    // init controls states
+    func initControlStates() {
+        if let meme = editMeme {
+            // edit mode
+            topTextField.text = meme.topText
+            bottomTextField.text = meme.bottomText
+            imageView.image  = meme.originalImage
+            updateControlsToAfterImagePicked()
+            navigationItem.title = "Edit Meme"
+        } else {
+            // add mode
+            topTextField.text = "TOP"
+            topTextField.enabled = false
+            bottomTextField.text = "BOTTOM"
+            bottomTextField.enabled = false
+            shareButton.enabled = false
+            imageView.image = nil
+            navigationItem.title = "Add Meme"
+            
+            // if user run this for the first time with no previous created memes,
+            // do not allow user to cancel out of the screen that creates a new meme
+            cancelButton.enabled = Meme.allMemes.count > 0
+        }
+       
     }
     
     // update control states to what they should be once an image is picked
@@ -201,4 +217,3 @@ class EditMemeViewController: UIViewController,
         cancelButton.enabled = true
     }
 }
-
