@@ -14,6 +14,7 @@ class EditMemeViewController: UIViewController,
     UITextFieldDelegate {
 
     var editMeme: Meme?
+    var editMemeIndex: Int?
     
     @IBOutlet weak var albumButton: UIBarButtonItem!
     @IBOutlet weak var cameraButton: UIBarButtonItem!
@@ -162,7 +163,14 @@ class EditMemeViewController: UIViewController,
     func save() {
         let image = generateMemedImage()
         var meme = Meme(topText: topTextField.text, bottomText: bottomTextField.text, originalImage: imageView.image!, memedImage: image)
-        Meme.add(meme)
+        if let index = editMemeIndex {
+            // edit mode
+            Meme.update(index, meme: meme)
+        }
+        else {
+            // add mode
+            Meme.add(meme)
+        }
     }
     
     // configure the text fields appearance

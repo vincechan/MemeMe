@@ -28,6 +28,7 @@ class MemeDetailViewController: UIViewController {
         // present the edit meme view controller to edit a meme
         let controller = storyboard!.instantiateViewControllerWithIdentifier("EditMemeViewController") as! EditMemeViewController
         controller.editMeme = Meme.allMemes[memeIndex]
+        controller.editMemeIndex = memeIndex
         let navigation = UINavigationController(rootViewController: controller)
         presentViewController(navigation, animated: true, completion: nil)
     }

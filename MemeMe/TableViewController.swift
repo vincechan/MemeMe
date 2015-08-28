@@ -14,7 +14,6 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
     }
     
     @IBAction func addMeme(sender: UIBarButtonItem) {
@@ -33,7 +32,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
      func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return Meme.allMemes.count
     }
-
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("MemeTableViewCell", forIndexPath: indexPath) as! UITableViewCell
 
@@ -50,5 +49,16 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
         let controller = storyboard!.instantiateViewControllerWithIdentifier("MemeDetailViewController") as! MemeDetailViewController
         controller.memeIndex = indexPath.row
         navigationController!.pushViewController(controller, animated: true)
+    }
+    
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if (editingStyle == UITableViewCellEditingStyle.Delete) {
+            Meme.remove(indexPath.row)
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
+        }
     }
 }

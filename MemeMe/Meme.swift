@@ -34,4 +34,10 @@ extension Meme {
         let appDelegate = object as! AppDelegate
         appDelegate.memes.append(meme)
     }
+    
+    static func update(index: Int, meme: Meme) {
+        let object = UIApplication.sharedApplication().delegate
+        let appDelegate = object as! AppDelegate
+        appDelegate.memes[index] = meme
+    }
 }
