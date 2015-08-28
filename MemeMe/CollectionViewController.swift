@@ -26,7 +26,7 @@ class CollectionViewController: UICollectionViewController {
     
     @IBAction func addMeme(sender: UIBarButtonItem) {
         // present the edit meme view controller to add a meme
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("EditMemeViewController") as! EditMemeViewController
+        let controller = storyboard!.instantiateViewControllerWithIdentifier("EditMemeViewController") as! EditMemeViewController
         let navigation = UINavigationController(rootViewController: controller)
         presentViewController(navigation, animated: true, completion: nil)
     }
@@ -46,15 +46,15 @@ class CollectionViewController: UICollectionViewController {
 
     override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         // present the detail view when a meme is selected
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MemeDetailViewController") as! MemeDetailViewController
+        let controller = storyboard!.instantiateViewControllerWithIdentifier("MemeDetailViewController") as! MemeDetailViewController
         controller.memeIndex = indexPath.row
-        self.navigationController!.pushViewController(controller, animated: true)
+        navigationController!.pushViewController(controller, animated: true)
     }
     
     func configureLayout() {
         let space: CGFloat = 3.0
-        let narrowSideLength = self.view.frame.width < self.view.frame.height ?
-            self.view.frame.width : self.view.frame.height
+        let narrowSideLength = view.frame.width < view.frame.height ?
+            view.frame.width : view.frame.height
         let dimension = (narrowSideLength  - (2 * space)) / 3.0
         
         flowLayout.minimumInteritemSpacing = space

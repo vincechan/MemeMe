@@ -26,7 +26,7 @@ class EditMemeViewController: UIViewController,
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.toolbarHidden = false
+        navigationController?.toolbarHidden = false
         
         configureTextFields()
         initControlStates()

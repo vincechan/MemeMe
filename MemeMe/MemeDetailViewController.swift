@@ -26,7 +26,7 @@ class MemeDetailViewController: UIViewController {
 
     func edit() {
         // present the edit meme view controller to edit a meme
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("EditMemeViewController") as! EditMemeViewController
+        let controller = storyboard!.instantiateViewControllerWithIdentifier("EditMemeViewController") as! EditMemeViewController
         controller.editMeme = Meme.allMemes[memeIndex]
         let navigation = UINavigationController(rootViewController: controller)
         presentViewController(navigation, animated: true, completion: nil)
@@ -36,6 +36,6 @@ class MemeDetailViewController: UIViewController {
         // delete the meme and go back to previous view
         Meme.remove(memeIndex)
        
-        self.navigationController?.popViewControllerAnimated(true)
+        navigationController?.popViewControllerAnimated(true)
     }
 }

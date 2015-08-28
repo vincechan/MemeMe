@@ -19,7 +19,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     @IBAction func addMeme(sender: UIBarButtonItem) {
         // present the edit meme view controller to add a meme
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("EditMemeViewController") as! EditMemeViewController
+        let controller = storyboard!.instantiateViewControllerWithIdentifier("EditMemeViewController") as! EditMemeViewController
         let navigation = UINavigationController(rootViewController: controller)
         presentViewController(navigation, animated: true, completion: nil)
     }
@@ -47,8 +47,8 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         // present the detail view when a meme is selected
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier("MemeDetailViewController") as! MemeDetailViewController
+        let controller = storyboard!.instantiateViewControllerWithIdentifier("MemeDetailViewController") as! MemeDetailViewController
         controller.memeIndex = indexPath.row
-        self.navigationController!.pushViewController(controller, animated: true)
+        navigationController!.pushViewController(controller, animated: true)
     }
 }
